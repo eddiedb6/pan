@@ -4,6 +4,7 @@
         AFWConst.Type: AFWConst.UIRoot,
         AFWConst.SubUI: [
         {
+            # Web Config
             AFWConst.Name: "Browser",
             AFWConst.Type: AFWConst.UIWeb,
             AFWConst.Plugin: AFWConst.PluginSelenium,
@@ -17,6 +18,15 @@
             },
                 ImportFile("ConfigLogin.py"),
                 ImportFile("ConfigMain.py")
+            ]
+        },
+        {
+            # App Config
+            AFWConst.Name: "Desktop",
+            AFWConst.Type: AFWConst.AppRoot,
+            AFWConst.Plugin: AFWConst.PluginMSApp,
+            AFWConst.SubUI: [
+                ImportFile("ConfigWinForm.py")
             ]
         }]
     },
