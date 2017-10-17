@@ -16,5 +16,14 @@ def Login(browser, username, password):
     userNameEditBox.InputText(username)
     passwordEditBox.InputText(password)
 
-    return loginButton.Click()
+    if not loginButton.Click():
+        return False
 
+    welcomeButton = browser.TryToFindSubUI("ButtonWelcome")
+    if welcomeButton is not None:
+        print("Find welcome screen")
+        welcomeButton.Click()
+    else:
+        print("No welcome found!")
+
+    return True

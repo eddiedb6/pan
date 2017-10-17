@@ -13,4 +13,5 @@ auto.BreakTime = 200 # ms
 if auto.Load(os.path.join(os.path.split(os.path.realpath(__file__))[0], "scripts/Config.py")):
     auto.Execute()
 
+auto.Destroy()
 

@@ -3,10 +3,15 @@
     AFWConst.Type: AFWConst.WebPage,
     AFWConst.SubUI: [
     {
-        AFWConst.Name: "LinkAccountLogin",
-        AFWConst.Type: AFWConst.WebLink,
-        AFWConst.Text: "帐号登录",
-        AFWConst.BreakTime: 20000 # 20000 is need to set proxy in VM
+        AFWConst.Name: "LinkAccountLoginPanel",
+        AFWConst.Type: AFWConst.WebPanel,
+        AFWConst.AttrClass: "account-title",
+        AFWConst.BreakTime: 20000, # 20000 is need to set proxy in VM
+        AFWConst.SubUI: [
+        {
+            AFWConst.Name: "LinkAccountLogin",
+            AFWConst.Type: AFWConst.WebLink
+        }]
     },
     {
         AFWConst.Name: "EditUserName",

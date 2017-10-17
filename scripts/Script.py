@@ -12,13 +12,7 @@ username = PanConfig.username
 password = PanConfig.password
 
 browser = afw.OpenWebBrowser("Browser")
-if not Login(browser, username, password):
-    sys.exit("Login failed!")
-
-welcomeButton = browser.TryToFindSubUI("ButtonWelcome")
-if welcomeButton is not None:
-    print "Find welcome screen"
-    welcomeButton.Click()
+if Login(browser, username, password):
+    pass
 else:
-    print "No welcome found!"
-    
+    print("Log in failed!")    
