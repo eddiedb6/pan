@@ -1,4 +1,4 @@
 ### Credential config start ###
-username = ""
-password = ""
+username = "baiduusername"
+password = "baidupassword"
 ### Credential config end ###

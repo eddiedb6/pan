@@ -16,3 +16,5 @@ if Login(browser, username, password):
     pass
 else:
     print("Log in failed!")    
+
+#browser.Quit()
