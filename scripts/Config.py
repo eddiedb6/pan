@@ -10,18 +10,18 @@
             AFWConst.Plugin: {
                 AFWConst.PluginName: AFWConst.PluginSelenium
             },
-            AFWConst.Browser: AFWConst.BrowserFireFox,
+            AFWConst.Browser: AFWConst.BrowserChrome,
             AFWConst.SubUI: [
             {
                 AFWConst.Name: "URLLogin",
                 AFWConst.Type: AFWConst.WebEntry,
-                AFWConst.URL: "http://pan.baidu.com",
+                AFWConst.URL: "https://pan.baidu.com",
                 AFWConst.BreakTime: 1000,
                 AFWConst.SubUI: [
-                    ImportFile("ConfigLogin.py"),
-                    ImportFile("ConfigMain.py")
+                    ImportFile("login/Config.py"),
+                    ImportFile("main/Config.py")
                 ]
-            }],
+            }]
         },
         {
             # App Config
@@ -31,12 +31,12 @@
                 AFWConst.PluginName: AFWConst.PluginProxyApp,
                 AFWConst.Proxy: {
                     AFWConst.ProxyType: AFWConst.ProxyLocal,
-                    AFWConst.ProxyLauncher: "python",
-                    AFWConst.PluginName: "PluginSelenium"
+                    AFWConst.ProxyLauncher: "c:/App/IronPython-2.7.5/ipy.exe",
+                    AFWConst.PluginName: "PluginMSApp"
                 }
             },
             AFWConst.SubUI: [
-                ImportFile("ConfigWinForm.py")
+                ImportFile("win/Config.py")
             ]
         }]
     },
