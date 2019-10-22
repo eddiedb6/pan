@@ -6,17 +6,17 @@
         {
             # Web Config
             AFWConst.Name: "Browser",
-            AFWConst.Type: AFWConst.UIWeb,
+            AFWConst.Type: AFWConst.UIBrowser,
             AFWConst.Plugin: {
                 AFWConst.PluginName: AFWConst.PluginSelenium
             },
-            AFWConst.Browser: AFWConst.BrowserChrome,
+            AFWConst.Browser: AFWConst.BrowserFireFox,
             AFWConst.SubUI: [
             {
                 AFWConst.Name: "URLLogin",
-                AFWConst.Type: AFWConst.WebEntry,
+                AFWConst.Type: AFWConst.UIWebEntry,
                 AFWConst.URL: "https://pan.baidu.com",
-                AFWConst.BreakTime: 1000,
+                AFWConst.BreakTime: 2000,
                 AFWConst.SubUI: [
                     ImportFile("login/Config.py"),
                     ImportFile("main/Config.py")
@@ -26,7 +26,7 @@
         {
             # App Config
             AFWConst.Name: "Desktop",
-            AFWConst.Type: AFWConst.AppRoot,
+            AFWConst.Type: AFWConst.UIDesktop,
             AFWConst.Plugin: {
                 AFWConst.PluginName: AFWConst.PluginProxyApp,
                 AFWConst.Proxy: {

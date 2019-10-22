@@ -13,8 +13,8 @@ def Login(browser, username, password):
     passwordEditBox = loginPage.FindSubUI("EditPassword")
     loginButton = loginPage.FindSubUI("ButtonLogin")
 
-    userNameEditBox.InputText(username)
-    passwordEditBox.InputText(password)
+    userNameEditBox.Input(username)
+    passwordEditBox.Input(password)
 
     if not loginButton.Click():
         return False
