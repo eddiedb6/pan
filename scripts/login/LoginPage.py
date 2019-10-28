@@ -28,7 +28,7 @@ class LoginPage:
         if not loginButton.Click():
             return False
 
-        print("Wait user to login")
+        print(">> Wait user to login")
         sys.stdin.read(1)
 
         return True

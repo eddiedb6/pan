@@ -7,9 +7,12 @@ sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../.
 sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../scripts"))
 sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../scripts/login"))
 sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../scripts/main"))
+sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../scripts/pos"))
+sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../scripts/data"))
 
 from LoginPage import *
 from MainPage import *
+from PanOS import *
 import PanConfig
 
 import time
@@ -19,33 +22,12 @@ password = PanConfig.password
 
 browser = afw.OpenWebBrowser("Browser")
 
-loginPage = LoginPage(browser)
+print(">> Wait browser to open")
+sys.stdin.read(1)
 
-if loginPage.Login(username, password):
-    pass
+if LoginPage(browser).Login(username, password):
+    PanOS(browser).Run()
 else:
     print("Log in failed!")
-
-mainPage = MainPage(browser)
-
-uploadButton = mainPage.GetUploadFileButton()
-allFileButton = mainPage.GetAllFileButton()
-
-mainPage.OpenAlbum()
-time.sleep(3)
-allFileButton.Click()
-time.sleep(3)
-mainPage.OpenAlbum()
-time.sleep(3)
-uploadButton.Click()
-
-#form = afw.FindWinForm("FormBrowser");
-#if form != None:
-#    print("Find!")
-#else:
-#    print("Not Find!")
-
-print("Wait user to quit")
-sys.stdin.read(1)
 
 browser.Quit()

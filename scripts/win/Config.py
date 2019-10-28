@@ -1,6 +1,6 @@
 {
     AFWConst.Name: "FormBrowser",
-    AFWConst.Type: AFWConst.AppForm,
+    AFWConst.Type: AFWConst.UIForm,
     AFWConst.Caption: [
         "打开"
     ],
