@@ -3,6 +3,7 @@ import time
 
 import AFWConst
 from Item import *
+from Utility import *
 
 class MainPage:
     def __init__(self, browser):
@@ -56,7 +57,7 @@ class MainPage:
             if folder.strip() == "":
                 continue
             if self.__openFolder(basePath, folder.strip()):
-                basePath = os.path.join(basePath, folder.strip())
+                basePath = JoinPath(basePath, folder.strip())
             else:
                 print("** Failed to open '" + folder + "' of " + path)
                 return False
@@ -103,7 +104,7 @@ class MainPage:
             item = Item()
             item.Name = name
             item.BasePath = path
-            item.FullPath = os.path.join(item.BasePath, name)
+            item.FullPath = JoinPath(item.BasePath, name)
             item.IsDir = isDir
             result.append(item)
 

@@ -4,6 +4,7 @@ import re
 import PanConfig
 
 from Item import *
+from Utility import *
 
 class File:
     def __init__(self):
@@ -26,7 +27,7 @@ class File:
             result = Item()
             result.Name = item
             result.BasePath = dir
-            result.FullPath = os.path.join(dir, item)
+            result.FullPath = JoinPath(dir, item)
             result.IsDir = os.path.isdir(result.FullPath)
             results.append(result)
             

@@ -5,6 +5,7 @@ from MainPage import *
 from Console import *
 from File import *
 from Item import *
+from Utility import *
 
 class PanOS:
     def __init__(self, browser):
@@ -82,8 +83,13 @@ class PanOS:
     def __doCheck(self, srcDir, pageDir):
         missedItems, matchedItems, redundancy = self.__doCompare(srcDir, pageDir)
         self.__generateCheckReport(srcDir, pageDir, missedItems, matchedItems, redundancy)
-        nextCheck = self.__matchQueue.popleft()
-        if nextCheck is not None and nextCheck[0].IsDir:
+        nextCheck = None
+        while len(self.__matchQueue) > 0:
+            pair = self.__matchQueue.popleft()
+            if pair[0].IsDir:
+                nextCheck = pair
+                break
+        if nextCheck is not None:
             self.__doCheck(nextCheck[0].FullPath, nextCheck[1].FullPath)
                 
     def __matchItem(self, target, pageItems):
@@ -154,7 +160,7 @@ class PanOS:
     def __copyToPage(self, srcItem, pageDir):
         if not self.__page.Copy(srcItem, pageDir):
             return
-        pagePath = os.path.join(pageDir, srcItem.Name)
+        pagePath = JoinPath(pageDir, srcItem.Name)
         self.__outputs.append("[Copy] " + srcItem.FullPath + " -> " + pagePath)
         if srcItem.IsDir:
             self.__doSync(srcItem.FullPath, pagePath)
