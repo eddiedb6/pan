@@ -2,38 +2,27 @@ import os
 import time
 
 import AFWConst
+import PanConfig
 from Item import *
 from Utility import *
 
 class MainPage:
-    def __init__(self, browser):
+    def __init__(self, browser, windows):
         if browser is None:
             raise Exception("None browser for MainPage")
         self.__browser = browser
 
+        if windows is None:
+            raise Exception("None windows for MainPage")
+        self.__windows = windows
+
         self.__page = self.__browser.FindSubUI("PageMain")
-        if self.__page is None:
-            raise Exception("Failed to open main page")
-
         self.__uploadButton = self.__page.FindSubUI("ButtonUploadFile")
-        if self.__uploadButton is None:
-            raise Exception("Failed to find upload button")
-
+        self.__createButton = self.__page.FindSubUI("ButtonCreateFolder")
         self.__area = self.__page.FindSubUI("WorkingArea")
-        if self.__area is None:
-            raise Exception("Failed to find working area")
-
         self.__addressStatus = self.__page.FindSubUI("AddressStatus")
-        if self.__addressStatus is None:
-            raise Exception("Failed to find address status")
-
         self.__address = self.__addressStatus.FindSubUI("AddressValue")
-        if self.__address is None:
-            raise Exception("Failed to find address bar")
-
         self.__fileRoot = self.__page.FindSubUI("EntryAllFile")
-        if self.__fileRoot is None:
-            raise Exception("Failed to find root button")
 
     ### Properties ###
 
@@ -110,11 +99,20 @@ class MainPage:
 
         return result
 
-    def Copy(self, item, dir):
-        return True
+    def Copy(self, item, path):
+        if not self.GotoDir(path):
+            raise Exception("Failed to goto dir for copy: " + path)
+        currentPath = self.__getCurrentPath()
+        if currentPath != path:
+            raise Exception("Current path is not copy path: " + path)
+        if item.IsDir:
+            return self.__uploadFile(item)
+        return self.__createFoler(item)
 
     def Delete(self, item):
-        return True
+        if not PanConfig.IsDeleteRedundant:
+            return True
+        return False
 
     def __openFolder(self, basePath, folder):
         while True:
@@ -168,4 +166,52 @@ class MainPage:
         if folder.Click():
             time.sleep(1)
             return True
+        return False
+
+    def __uploadFile(self, item):
+        self.__waitInUploadQueue()
+        if not self.__uploadButton.Click():
+            return False
+        return self.__windows.UploadFile(item)
+
+    def __createFoler(self, item):
+        if not self.__createButton.Click():
+            return False
+        return self.__inputNewFolderName(item.Name)
+
+    def __waitInUploadQueue(self):
+        # TODO
+        pass
+
+    def __inputNewFolderName(self, name):
+        inputConfig = {
+            AFWConst.Name: "NewFolderWrapper",
+            AFWConst.Type: AFWConst.UICommon,
+            AFWConst.AttrClass: "ExFGye",
+            AFWConst.SubUI: [
+            {
+                AFWConst.Name: "NewFolderInput",
+                AFWConst.Type: AFWConst.UIInputable,
+                AFWConst.AttrClass: "GadHyA"
+            },
+            {
+                AFWConst.Name: "NewFolderInputConfirm",
+                AFWConst.Type: AFWConst.UIClickable,
+                AFWConst.AttrClass: "eyymZQ"
+            }]
+        }
+
+        inputs = self.__page.TryToFindDynamicSubUI(inputConfig)
+        if len(inputs) <= 0:
+            raise Exception("Could not input new folder name")
+        inputWrapper = inputs[0]
+        if inputWrapper.GetAttribute("style").find("display: none") < 0:
+            return False
+
+        inputBox = inputWrapper.FindSubUI(inputWrapper.GetDynamicUIName("NewFolderInput", 0))
+        inputConfirm = inputWrapper.FindSubUI(inputWrapper.GetDynamicUIName("NewFolderInputConfirm", 0))
+
+        if inputBox.Input(name):
+            return inputConfirm.Click()
+
         return False

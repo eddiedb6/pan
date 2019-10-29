@@ -6,3 +6,6 @@ password = "baidupassword"
 FileIgnoreRules = [
     "^\\."
 ]
+
+IsDeleteRedundant = False
+FindRetryTimes = 3

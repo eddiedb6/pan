@@ -8,8 +8,8 @@ from Item import *
 from Utility import *
 
 class PanOS:
-    def __init__(self, browser):
-        self.__page = MainPage(browser)
+    def __init__(self, browser, windows):
+        self.__page = MainPage(browser, windows)
         
         self.__console = Console(self)
         self.__file = File()
