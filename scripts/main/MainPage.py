@@ -193,7 +193,9 @@ class MainPage:
         return False
 
     def __uploadFile(self, item):
-        self.__waitInUploadQueue()
+        if not self.__uploader.WaitUploadingQueueAvailable():
+            print("** Wait for uploader queue failed")
+            return False
         if not self.__executeClick(self.__uploadButton):
             return False
         if not self.__windows.UploadFile(item):
@@ -208,9 +210,6 @@ class MainPage:
             return False
         time.sleep(PanConfig.LongBreakSeconds)
         return True
-
-    def __waitInUploadQueue(self):
-        self.__uploader.WaitUploadingQueueAvailable()
 
     def __inputNewFolderName(self, name):
         inputWrapper = SafeFind(lambda: self.__page.FindSubUI("NewFolderWrapper"))

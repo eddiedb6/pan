@@ -16,7 +16,7 @@ class Console:
             print(">> Usange: " + cmdCheck + ", " + cmdSync + ", " + cmdPrint + ", " + cmdQuit + "|" + cmdExit)
 
             input = sys.stdin.readline().strip()
-            cmds = input.split(" ")
+            cmds = self.__preHandleCmd(input)
 
             cmdLen = len(cmds)
             if cmdLen <= 0:
@@ -44,3 +44,21 @@ class Console:
         print("    sync SRC_DIR PAN_DIR")
         print("    print OUTPUT_PATH")
         print("    quit|exit")
+
+    def __preHandleCmd(self, cmdStr):
+        # To remove white space in path
+        isInQuote = False
+        handledStr = ""
+        for c in cmdStr:
+            if c == '\"':
+                isInQuote = not isInQuote
+                continue
+            if c == " " and isInQuote:
+                handledStr += "%20"
+            else:
+                handledStr += c
+        cmds = handledStr.split(" ")
+        result = []
+        for cmd in cmds:
+            result.append(cmd.strip().replace("%20", " "))
+        return result

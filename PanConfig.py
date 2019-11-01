@@ -9,6 +9,7 @@ ClassListItemIcon = "vgbrZYMZ"
 
 FileIgnoreRules = [
     "^\\."
+    "Thumbs\\.db"
 ]
 
 IsDeleteRedundant = False

@@ -27,21 +27,22 @@ class Uploader:
             return 0
         totalNum = match.group(2)
         doneNum = match.group(1)
-        return totalNum - doneNum
+        return int(totalNum) - int(doneNum)
         
     def GetUploadAbilityCount(self):
-        inQueueNum = self.GetUploadAbilityCount()
-        return PanConfig.UploadingAbility - inQueueNum
+        inQueueNum = self.GetUploadingFileNumber()
+        result = PanConfig.UploadingAbility - inQueueNum
+        if result < 0:
+            result = 0
+        return result
 
     def WaitUploadingQueueAvailable(self):
         startTime = datetime.datetime.now()
         while True:
             if self.GetUploadAbilityCount() > 0:
-                return
+                return True
             nowTime = datetime.datetime.now()
             if (nowTime - startTime).seconds > PanConfig.UploadingMaxWaitingSeconds:
-                raise("It has been too long to wait for uploading queue")
+                break
             time.sleep(PanConfig.UploadingCheckInterval)
-        
-
-
+        return False
