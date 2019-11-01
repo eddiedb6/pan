@@ -6,7 +6,6 @@ class Item:
         self.__isDir = False
         self.__isChecked = False
 
-
     @property
     def Name(self):
         return self.__name
@@ -66,5 +65,3 @@ class Item:
     @IsChecked.deleter
     def IsChecked(self):
         del self.__isChecked
-
-

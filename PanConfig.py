@@ -16,5 +16,9 @@ FindRetryTimes = 3
 
 # The break time after each UI operation
 ShortBreakSeconds = 1
-
 LongBreakSeconds = 3
+
+# Uploader
+UploadingAbility = 500
+UploadingMaxWaitingSeconds = 300
+UploadingCheckInterval = 3

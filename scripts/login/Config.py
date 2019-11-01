@@ -6,7 +6,7 @@
         AFWConst.Name: "PasswordLogin",
         AFWConst.Type: AFWConst.UIClickable,
         AFWConst.AttrID: "TANGRAM__PSP_4__footerULoginBtn",
-        AFWConst.BreakTime: 3000
+        AFWConst.BreakTime: 2000
     },
     {
         AFWConst.Name: "EditUserName",

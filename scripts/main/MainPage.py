@@ -5,6 +5,7 @@ import AFWConst
 import PanConfig
 from Item import *
 from Utility import *
+from Uploader import *
 
 class MainPage:
     def __init__(self, browser, windows):
@@ -23,6 +24,7 @@ class MainPage:
         self.__addressStatus = self.__page.FindSubUI("AddressStatus")
         self.__address = self.__addressStatus.FindSubUI("AddressValue")
         self.__fileRoot = self.__page.FindSubUI("EntryAllFile")
+        self.__uploader = Uploader(self.__page)
 
     ### Properties ###
 
@@ -152,7 +154,7 @@ class MainPage:
                 "title": folder
             }
         }
-        folderItems = self.__area.TryToFindDynamicSubUI(folderConfig)
+        folderItems = SafeListFind(lambda: self.__area.TryToFindDynamicSubUI(folderConfig))
         if len(folderItems) != 1:
             return False
         return self.__executeClick(folderItems[0])
@@ -161,7 +163,7 @@ class MainPage:
         return "DynamicFolder" + folder
 
     def __getCurrentPath(self):
-        if self.__addressStatus.GetAttribute("style") != "display: block;":
+        if not IsUIVisible(self.__addressStatus):
             # Then it's root, the ul element will be hiden
             return "/"
 
@@ -172,7 +174,7 @@ class MainPage:
             AFWConst.Attributes: {
             }
         }
-        addressItems = self.__address.TryToFindDynamicSubUI(addressConfig)
+        addressItems = SafeListFind(lambda: self.__address.TryToFindDynamicSubUI(addressConfig))
         if len(addressItems) <= 0:
             raise Exception("It's impossible that got nothing from address bar")
 
@@ -208,12 +210,12 @@ class MainPage:
         return True
 
     def __waitInUploadQueue(self):
-        # TODO
-        pass
+        self.__uploader.WaitUploadingQueueAvailable()
 
     def __inputNewFolderName(self, name):
-        inputWrapper = self.__page.FindSubUI("NewFolderWrapper")
-        if inputWrapper.GetAttribute("style").find("display: none") >= 0:
+        inputWrapper = SafeFind(lambda: self.__page.FindSubUI("NewFolderWrapper"))
+        if not IsUIVisible(inputWrapper):
+            # When it's hidden, it is not usable
             return False
         inputBox = inputWrapper.FindSubUI("NewFolderInput")
         inputConfirm = inputWrapper.FindSubUI("NewFolderInputConfirm")

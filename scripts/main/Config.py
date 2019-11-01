@@ -20,6 +20,7 @@
     },
         ImportFile("main/bar/Config.py"),
         ImportFile("main/panel/Config.py"),
-        ImportFile("main/area/Config.py")
+        ImportFile("main/area/Config.py"),
+        ImportFile("main/uploader/Config.py")
     ]
 }

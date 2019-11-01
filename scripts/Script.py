@@ -11,6 +11,7 @@ sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../.
 sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../scripts/data"))
 sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../scripts/util"))
 sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../scripts/win"))
+sys.path.append(os.path.join(os.path.split(os.path.realpath(__file__))[0], "../../scripts/main/uploader"))
 
 from LoginPage import *
 from MainPage import *
