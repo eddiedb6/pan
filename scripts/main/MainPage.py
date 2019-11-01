@@ -27,6 +27,7 @@ class MainPage:
     ### Properties ###
 
     def GotoDir(self, path):
+        print(".. Go to: " + path)
         currentPath = self.__getCurrentPath()
         if path == currentPath:
             return True
@@ -54,6 +55,8 @@ class MainPage:
         return True
 
     def ListDir(self, path):
+        print(".. List: " + path)
+
         result = []
 
         if not self.GotoDir(path):
@@ -72,23 +75,24 @@ class MainPage:
             {
                 AFWConst.Name: baseName + "Name",
                 AFWConst.Type: AFWConst.UIClickable,
-                AFWConst.AttrClass: "lebNA3e"
+                AFWConst.AttrClass: PanConfig.ClassListItemClickable
             },
             {
                 AFWConst.Name: baseName + "Icon",
                 AFWConst.Type: AFWConst.UICommon,
-                AFWConst.AttrClass: "cduyKEp"
+                AFWConst.AttrClass: PanConfig.ClassListItemIcon
             }]
         }
 
-        lists = self.__area.TryToFindDynamicSubUI(config)
+        finder = lambda: self.__area.TryToFindDynamicSubUI(config)
+        lists = SafeListFind(finder)
 
         for i in range(0, len(lists)):
             listItem = lists[i]
             nameUI = listItem.FindSubUI(listItem.GetDynamicUIName(baseName + "Name", i))
             name = nameUI.GetAttribute("title")
             iconUI = listItem.FindSubUI(listItem.GetDynamicUIName(baseName + "Icon", i))
-            isDir = True if iconUI.GetAttribute("class") == "cduyKEp dir-small" else False
+            isDir = True if iconUI.GetAttribute("class") == (PanConfig.ClassListItemIcon + " dir-small") else False
 
             item = Item()
             item.Name = name
@@ -100,16 +104,34 @@ class MainPage:
         return result
 
     def Copy(self, item, path):
+        print(".. Copy: " + JoinPath(path, item.Name))
+
         if not self.GotoDir(path):
             raise Exception("Failed to goto dir for copy: " + path)
         currentPath = self.__getCurrentPath()
         if currentPath != path:
             raise Exception("Current path is not copy path: " + path)
+
+        newPath = JoinPath(path, item.Name)
         if item.IsDir:
-            return self.__uploadFile(item)
-        return self.__createFoler(item)
+            print(".. Try to create folder: " + newPath)
+            if self.__createFoler(item):
+                if self.GotoDir(newPath):
+                    print(".. Successfully create folder: " + newPath)
+                    return True
+            print(".. Failed to create folder: " + newPath)
+            return False
+
+        print(".. Try to upload file: " + newPath)
+        if self.__uploadFile(item):
+            print(".. Successfully upload file: " + newPath)
+            return True
+        print(".. Failed to upload file: " + newPath)
+        return False
 
     def Delete(self, item):
+        print(".. Delete: " + item.FullPath)
+
         if not PanConfig.IsDeleteRedundant:
             return True
         return False
@@ -133,7 +155,7 @@ class MainPage:
         folderItems = self.__area.TryToFindDynamicSubUI(folderConfig)
         if len(folderItems) != 1:
             return False
-        return self.__clickOnFolder(folderItems[0])
+        return self.__executeClick(folderItems[0])
 
     def __getDynamicFolderName(self, folder):
         return "DynamicFolder" + folder
@@ -160,58 +182,41 @@ class MainPage:
         return path[path.find("/"):]
 
     def __gotoRoot(self):
-        return self.__clickOnFolder(self.__fileRoot)
+        return self.__executeClick(self.__fileRoot)
 
-    def __clickOnFolder(self, folder):
-        if folder.Click():
-            time.sleep(1)
+    def __executeClick(self, clickable):
+        if clickable.Click():
+            time.sleep(PanConfig.ShortBreakSeconds)
             return True
         return False
 
     def __uploadFile(self, item):
         self.__waitInUploadQueue()
-        if not self.__uploadButton.Click():
+        if not self.__executeClick(self.__uploadButton):
             return False
-        return self.__windows.UploadFile(item)
+        if not self.__windows.UploadFile(item):
+            return False
+        time.sleep(PanConfig.LongBreakSeconds)
+        return True
 
     def __createFoler(self, item):
-        if not self.__createButton.Click():
+        if not self.__executeClick(self.__createButton):
             return False
-        return self.__inputNewFolderName(item.Name)
+        if not self.__inputNewFolderName(item.Name):
+            return False
+        time.sleep(PanConfig.LongBreakSeconds)
+        return True
 
     def __waitInUploadQueue(self):
         # TODO
         pass
 
     def __inputNewFolderName(self, name):
-        inputConfig = {
-            AFWConst.Name: "NewFolderWrapper",
-            AFWConst.Type: AFWConst.UICommon,
-            AFWConst.AttrClass: "ExFGye",
-            AFWConst.SubUI: [
-            {
-                AFWConst.Name: "NewFolderInput",
-                AFWConst.Type: AFWConst.UIInputable,
-                AFWConst.AttrClass: "GadHyA"
-            },
-            {
-                AFWConst.Name: "NewFolderInputConfirm",
-                AFWConst.Type: AFWConst.UIClickable,
-                AFWConst.AttrClass: "eyymZQ"
-            }]
-        }
-
-        inputs = self.__page.TryToFindDynamicSubUI(inputConfig)
-        if len(inputs) <= 0:
-            raise Exception("Could not input new folder name")
-        inputWrapper = inputs[0]
-        if inputWrapper.GetAttribute("style").find("display: none") < 0:
+        inputWrapper = self.__page.FindSubUI("NewFolderWrapper")
+        if inputWrapper.GetAttribute("style").find("display: none") >= 0:
             return False
-
-        inputBox = inputWrapper.FindSubUI(inputWrapper.GetDynamicUIName("NewFolderInput", 0))
-        inputConfirm = inputWrapper.FindSubUI(inputWrapper.GetDynamicUIName("NewFolderInputConfirm", 0))
-
+        inputBox = inputWrapper.FindSubUI("NewFolderInput")
+        inputConfirm = inputWrapper.FindSubUI("NewFolderInputConfirm")
         if inputBox.Input(name):
-            return inputConfirm.Click()
-
+            return self.__executeClick(inputConfirm)
         return False

@@ -10,7 +10,7 @@
             AFWConst.Plugin: {
                 AFWConst.PluginName: AFWConst.PluginSelenium
             },
-            AFWConst.Browser: AFWConst.BrowserFireFox,
+            AFWConst.Browser: AFWConst.BrowserChrome,
             AFWConst.SubUI: [
             {
                 AFWConst.Name: "URLLogin",

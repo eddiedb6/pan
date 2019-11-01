@@ -13,7 +13,7 @@ class Console:
 
         while True:
             print("----------------")
-            print(">> " + cmdCheck + ", " + cmdSync + ", " + cmdPrint + ", " + cmdQuit + "|" + cmdExit)
+            print(">> Usange: " + cmdCheck + ", " + cmdSync + ", " + cmdPrint + ", " + cmdQuit + "|" + cmdExit)
 
             input = sys.stdin.readline().strip()
             cmds = input.split(" ")

@@ -1,4 +1,5 @@
 import os
+import time
 import PanConfig
 
 def JoinPath(basePath, path):
@@ -7,6 +8,7 @@ def JoinPath(basePath, path):
 
 def SafeFind(finder):
     for i in range(0, PanConfig.FindRetryTimes):
+        time.sleep(PanConfig.ShortBreakSeconds)
         try:
             result = finder()
             if result is not None:
@@ -14,4 +16,16 @@ def SafeFind(finder):
         except:
             continue
     return None
+
+def SafeListFind(finder):
+    result = []
+    for i in range(0, PanConfig.FindRetryTimes):
+        time.sleep(PanConfig.ShortBreakSeconds)
+        try:
+            result = finder()
+            if len(result) > 0:
+                return result
+        except:
+            continue
+    return result
 

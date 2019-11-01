@@ -1,6 +1,8 @@
 import os
+import time
 
 import AFWConst
+import PanConfig
 from Utility import *
 from AFWUIUtil import *
 
@@ -27,14 +29,18 @@ class Windows:
         SimulateTextInput(form, item.BasePath)
         form.PressKey(AFWConst.AFWKeyEnter)
         form.ReleaseKey(AFWConst.AFWKeyEnter)
-        
+
+        time.sleep(PanConfig.ShortBreakSeconds)
+
         # Alt n to locate file
         form.PressKey(AFWConst.AFWKeyAlt)
         form.PressKey(AFWConst.AFWKeyN)
         form.ReleaseKey(AFWConst.AFWKeyN)
         form.ReleaseKey(AFWConst.AFWKeyAlt)
         SimulateTextInput(form, item.Name)
-        
+
+        time.sleep(PanConfig.ShortBreakSeconds)
+
         # Alt O to confirm
         form.PressKey(AFWConst.AFWKeyAlt)
         form.PressKey(AFWConst.AFWKeyO)

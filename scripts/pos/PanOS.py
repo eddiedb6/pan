@@ -68,6 +68,9 @@ class PanOS:
         for item in pageItems:
             if not item.IsChecked:
                 redundancy.append(item)
+            else:
+                # Clear flag
+                item.IsChecked = False
         return missedItems, matchedItems, redundancy
                 
     def __doSync(self, srcDir, pageDir):

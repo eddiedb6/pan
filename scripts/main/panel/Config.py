@@ -8,9 +8,9 @@
         AFWConst.Type: AFWConst.UIClickable,
         AFWConst.AttrTag: "a",
         AFWConst.Attributes: {
-            "node-type": "zzlpzBD",
+            "node-type": "ehlmPARY",
             "path": "/",
-            "class": "toapGAd cxcfyKkK"
+            "class": "tjrPnRQ raxZYvB"
         }
     }]
 }
