@@ -1,5 +1,6 @@
 import os
 import time
+import platform
 
 import AFWConst
 import PanConfig
@@ -21,12 +22,16 @@ class Windows:
             print("** Failed to find open form")
             return False
 
+        path = item.BasePath
+        if platform.system() == "Windows" or platform.system() == "cli":
+            path = path.replace("/", "\\")
+
         # Alt d to input base path
         form.PressKey(AFWConst.AFWKeyAlt)
         form.PressKey(AFWConst.AFWKeyD)
         form.ReleaseKey(AFWConst.AFWKeyD)
         form.ReleaseKey(AFWConst.AFWKeyAlt)
-        SimulateTextInput(form, item.BasePath)
+        SimulateTextInput(form, path)
         form.PressKey(AFWConst.AFWKeyEnter)
         form.ReleaseKey(AFWConst.AFWKeyEnter)
 

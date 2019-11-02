@@ -20,6 +20,6 @@ ShortBreakSeconds = 1
 LongBreakSeconds = 3
 
 # Uploader
-UploadingAbility = 500
+UploadingAbility = 290
 UploadingMaxWaitingSeconds = 300
 UploadingCheckInterval = 3
