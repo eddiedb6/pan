@@ -18,18 +18,19 @@ class MainPage:
         self.__windows = windows
 
         self.__page = self.__browser.FindSubUI("PageMain")
-        self.__uploadButton = self.__page.FindSubUI("ButtonUploadFile")
-        self.__createButton = self.__page.FindSubUI("ButtonCreateFolder")
-        self.__area = self.__page.FindSubUI("WorkingArea")
-        self.__addressStatus = self.__page.FindSubUI("AddressStatus")
-        self.__address = self.__addressStatus.FindSubUI("AddressValue")
-        self.__fileRoot = self.__page.FindSubUI("EntryAllFile")
-        self.__uploader = Uploader(self.__page)
+
+        self.__uploadButton = None
+        self.__createButton = None
+        self.__area = None
+        self.__addressStatus = None
+        self.__address = None
+        self.__fileRoot = None
+        self.__uploader = None
+        self.__initPageElement()
 
     ### Properties ###
 
     def GotoDir(self, path):
-        print(".. Go to: " + path)
         currentPath = self.__getCurrentPath()
         if path == currentPath:
             return True
@@ -138,6 +139,16 @@ class MainPage:
             return True
         return False
 
+    def Reset(self):
+        self.__uploadButton.Dump()
+        self.__createButton.Dump()
+        self.__area.Dump()
+        self.__addressStatus.Dump()
+        self.__address.Dump()
+        self.__fileRoot.Dump()
+        self.__uploader.Dump()
+        self.__initPageElement()
+
     def __openFolder(self, basePath, folder):
         while True:
             currentPath = self.__getCurrentPath()
@@ -221,3 +232,12 @@ class MainPage:
         if inputBox.Input(name):
             return self.__executeClick(inputConfirm)
         return False
+
+    def __initPageElement(self):
+        self.__uploadButton = self.__page.FindSubUI("ButtonUploadFile")
+        self.__createButton = self.__page.FindSubUI("ButtonCreateFolder")
+        self.__area = self.__page.FindSubUI("WorkingArea")
+        self.__addressStatus = self.__page.FindSubUI("AddressStatus")
+        self.__address = self.__addressStatus.FindSubUI("AddressValue")
+        self.__fileRoot = self.__page.FindSubUI("EntryAllFile")
+        self.__uploader = Uploader(self.__page)

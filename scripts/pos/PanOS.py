@@ -9,6 +9,7 @@ from Utility import *
 
 class PanOS:
     def __init__(self, browser, windows):
+        self.__windows = windows
         self.__page = MainPage(browser, windows)
         
         self.__console = Console(self)
@@ -19,10 +20,23 @@ class PanOS:
         self.__finished = False
         
     def Run(self):
+        lastCmd = None
         while not self.__finished:
-            cmd = self.__console.GetCommand()
-            if cmd != None:
+            cmd = None
+            if lastCmd == None:
+                cmd = self.__console.GetCommand()
+            else:
+                cmd = lastCmd
+            if cmd == None:
+                continue
+            lastCmd = cmd
+            try:
                 cmd()
+            except:
+                print("** Reset on exception")
+                self.__reset()
+            else:
+                lastCmd = None
         
     def ExeCheck(self, srcDir, pageDir):
         self.__clearStack()
@@ -171,3 +185,7 @@ class PanOS:
     def __deleteFromPage(self, pageItem):
         if self.__page.Delete(pageItem):
             self.__outputs.append("[Delete] " + pageItem.FullPath)
+
+    def __reset(self):
+        self.__windows.Reset()
+        self.__page.Reset()

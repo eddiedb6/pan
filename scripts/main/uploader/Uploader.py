@@ -11,6 +11,11 @@ class Uploader:
         self.__headerText = page.FindSubUI("UploaderHeader")
         self.__minHeaderText = page.FindSubUI("UploaderMinHeader")
 
+    def Dump(self):
+        self.__uploader.Dump()
+        self.__headerText.Dump()
+        self.__minHeaderText.Dump()
+
     def GetUploadingFileNumber(self):
         if not IsUIVisible(self.__uploader):
             return 0

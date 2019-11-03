@@ -10,14 +10,21 @@ from AFWUIUtil import *
 class Windows:
     def __init__(self, root):
         self.__root = root
+        self.__needReset = False
+
+    def Reset(self):
+        self.__needReset = True
 
     def UploadFile(self, item):
         if not os.path.isfile(item.FullPath):
             print("** It's not file to upload: " + item.FullPath)
             return False
         
-        finder = lambda : self.__root.FindWinForm("FormBrowser")
-        form  = SafeFind(finder)
+        form  = SafeFind(lambda : self.__root.FindWinForm("FormBrowser"))
+        if self.__needReset:
+            form.Dump()
+            form = SafeFind(lambda : self.__root.FindWinForm("FormBrowser"))
+            self.__needReset = False
         if form is None:
             print("** Failed to find open form")
             return False
