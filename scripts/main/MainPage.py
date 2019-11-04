@@ -19,6 +19,8 @@ class MainPage:
 
         self.__page = self.__browser.FindSubUI("PageMain")
 
+        self.__uploadCount = 0
+
         self.__uploadButton = None
         self.__createButton = None
         self.__area = None
@@ -140,6 +142,8 @@ class MainPage:
         return False
 
     def Reset(self):
+        self.__uploadCount = 0
+        self.__uploader.Close()
         self.__uploadButton.Dump()
         self.__createButton.Dump()
         self.__area.Dump()
@@ -212,6 +216,10 @@ class MainPage:
         if not self.__windows.UploadFile(item):
             return False
         time.sleep(PanConfig.LongBreakSeconds)
+        self.__uploadCount += 1
+        if self.__uploadCount > PanConfig.UploadingAbility:
+            self.__uploader.Close()
+            self.__uploadCount = 0
         return True
 
     def __createFoler(self, item):

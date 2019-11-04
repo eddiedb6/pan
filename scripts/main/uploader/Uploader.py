@@ -8,21 +8,37 @@ import PanConfig
 class Uploader:
     def __init__(self, page):
         self.__uploader = page.FindSubUI("Uploader")
-        self.__headerText = page.FindSubUI("UploaderHeader")
-        self.__minHeaderText = page.FindSubUI("UploaderMinHeader")
+
+        self.__header = page.FindSubUI("UploaderHeader")
+        self.__headerText = self.__header.FindSubUI("UploaderHeaderText")
+        self.__headerClose = self.__header.FindSubUI("UploaderHeaderClose")
+
+        self.__minHeader = page.FindSubUI("UploaderMinHeader")
+        self.__minHeaderText = self.__minHeader.FindSubUI("UploaderMinHeaderText")
+        self.__minHeaderClose = self.__minHeader.FindSubUI("UploaderMinHeaderClose")
 
     def Dump(self):
         self.__uploader.Dump()
-        self.__headerText.Dump()
-        self.__minHeaderText.Dump()
+
+    def Close(self):
+        if not IsUIVisible(self.__uploader):
+            return
+        closeUI = None
+        if IsUIVisible(self.__header):
+            closeUI = self.__headerClosed
+        elif IsUIVisible(self.__minHeader):
+            closeUI = self.__minHeaderClose
+        else:
+            return
+        closeUI.Click()
 
     def GetUploadingFileNumber(self):
         if not IsUIVisible(self.__uploader):
             return 0
         textUI = None
-        if IsUIVisible(self.__headerText):
+        if IsUIVisible(self.__header):
             textUI = self.__headerText
-        elif IsUIVisible(self.__minHeaderText):
+        elif IsUIVisible(self.__minHeader):
             textUI = self.__minHeaderText
         else:
             return 0
@@ -30,9 +46,11 @@ class Uploader:
         match = re.search("\((\d+)/(\d+)\)", text)
         if not match:
             return 0
-        totalNum = match.group(2)
-        doneNum = match.group(1)
-        return int(totalNum) - int(doneNum)
+        totalNum = int(match.group(2))
+        doneNum = int(match.group(1))
+        if totalNum > PanConfig.UploadingAbility:
+            self.Close()
+        return totalNum - doneNum
         
     def GetUploadAbilityCount(self):
         inQueueNum = self.GetUploadingFileNumber()

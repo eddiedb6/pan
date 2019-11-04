@@ -1,6 +1,7 @@
 import sys
 import collections
 
+import PanConfig
 from MainPage import *
 from Console import *
 from File import *
@@ -21,6 +22,7 @@ class PanOS:
         
     def Run(self):
         lastCmd = None
+        exceptionCount = 0
         while not self.__finished:
             cmd = None
             if lastCmd == None:
@@ -33,9 +35,15 @@ class PanOS:
             try:
                 cmd()
             except:
-                print("** Reset on exception")
+                exceptionCount = exceptionCount + 1
+                if exceptionCount > PanConfig.FindRetryTimes:
+                    print("!!!! Now it's time to quit !!!!")
+                    i = sys.stdin.read(1)
+                    break
+                print("*** Reset on exception")
                 self.__reset()
             else:
+                exceptionCount = 0
                 lastCmd = None
         
     def ExeCheck(self, srcDir, pageDir):
