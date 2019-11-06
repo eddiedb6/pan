@@ -156,12 +156,25 @@ class MainPage:
         self.__initPageElement()
 
     def __openFolder(self, basePath, folder):
+        print(".. openFolder: " + basePath + ", " + folder)
         while True:
             currentPath = self.__getCurrentPath()
             if currentPath != basePath:
                 self.GotoDir(basePath)
             else:
                 break
+
+        # First try to scoll down to the end of page
+        # Otherwise the item you find maybe not loaded yet and could not be found
+        config = {
+            AFWConst.Name: "ListItem",
+            AFWConst.Type: AFWConst.UICommon,
+            AFWConst.AttrTag: "dd",
+            AFWConst.Attributes: {
+                "_installed": "1"
+            }
+        }
+        self.__queryWholePageDynamicItem(config)
 
         folderConfig = {
             AFWConst.Name: self.__getDynamicFolderName(folder),
@@ -171,7 +184,7 @@ class MainPage:
                 "title": folder
             }
         }
-        folderItems = self.__queryWholePageDynamicItem(folderConfig)
+        folderItems = SafeListFind(lambda: self.__area.TryToFindDynamicSubUI(folderConfig))
         if len(folderItems) != 1:
             return False
         return self.__executeClick(folderItems[0])
