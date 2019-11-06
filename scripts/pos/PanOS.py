@@ -47,6 +47,7 @@ class PanOS:
                 lastCmd = None
         
     def ExeCheck(self, srcDir, pageDir):
+        print(".. ExeCheck: " + srcDir + ", " + pageDir)
         self.__clearStack()
         if not self.__file.ValidateDir(srcDir) or not self.__page.GotoDir(pageDir):
             return
@@ -54,6 +55,7 @@ class PanOS:
         self.__printResult()
 
     def ExeSync(self, srcDir, pageDir):
+        print(".. ExeSync: " + srcDir + ", " + pageDir)
         self.__clearStack()
         if not self.__file.ValidateDir(srcDir) or not self.__page.GotoDir(pageDir):
             return
@@ -75,6 +77,7 @@ class PanOS:
         self.__finished = True
 
     def __doCompare(self, srcDir, pageDir):
+        print(".. doCompare: " + srcDir + ", " + pageDir)
         srcItems = self.__file.ListDir(srcDir)
         pageItems = self.__page.ListDir(pageDir)
         missedItems = []
@@ -96,6 +99,7 @@ class PanOS:
         return missedItems, matchedItems, redundancy
                 
     def __doSync(self, srcDir, pageDir):
+        print(".. doSync: " + srcDir + ", " + pageDir)
         missedItems, matchedItems, redundancy = self.__doCompare(srcDir, pageDir)
         for missedItem in missedItems:
             self.__copyToPage(missedItem, pageDir)

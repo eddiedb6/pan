@@ -33,6 +33,8 @@ class MainPage:
     ### Properties ###
 
     def GotoDir(self, path):
+        print(".. Goto: " + path)
+
         currentPath = self.__getCurrentPath()
         if path == currentPath:
             return True
@@ -89,8 +91,7 @@ class MainPage:
             }]
         }
 
-        finder = lambda: self.__area.TryToFindDynamicSubUI(config)
-        lists = SafeListFind(finder)
+        lists = self.__queryWholePageDynamicItem(config)
 
         for i in range(0, len(lists)):
             listItem = lists[i]
@@ -142,6 +143,7 @@ class MainPage:
         return False
 
     def Reset(self):
+        print(".. Reset")
         self.__uploadCount = 0
         self.__uploader.Close()
         self.__uploadButton.Dump()
@@ -169,7 +171,7 @@ class MainPage:
                 "title": folder
             }
         }
-        folderItems = SafeListFind(lambda: self.__area.TryToFindDynamicSubUI(folderConfig))
+        folderItems = self.__queryWholePageDynamicItem(folderConfig)
         if len(folderItems) != 1:
             return False
         return self.__executeClick(folderItems[0])
@@ -208,7 +210,7 @@ class MainPage:
         return False
 
     def __uploadFile(self, item):
-        if not self.__uploader.WaitUploadingQueueAvailable():
+        if not self.__uploader.WaitUploadingQueueFinished():
             print("** Wait for uploader queue failed")
             return False
         if not self.__executeClick(self.__uploadButton):
@@ -249,3 +251,22 @@ class MainPage:
         self.__address = self.__addressStatus.FindSubUI("AddressValue")
         self.__fileRoot = self.__page.FindSubUI("EntryAllFile")
         self.__uploader = Uploader(self.__page)
+
+    def __queryWholePageDynamicItem(self, config):
+        items = SafeListFind(lambda: self.__area.TryToFindDynamicSubUI(config))
+        if len(items) < PanConfig.MaxAreaListInitialItem:
+            return items
+        lastItem = items[len(items) - 1]
+        lastName = lastItem.GetConfig()[AFWConst.Name]
+        while True:
+            lastItem.ScrollHere()
+            time.sleep(PanConfig.LongBreakSeconds)
+            items = SafeListFind(lambda: self.__area.TryToFindDynamicSubUI(config))
+            latestLast = items[len(items) - 1]
+            latestName = latestLast.GetConfig()[AFWConst.Name]
+            if latestName == lastName:
+                # Now it is the end of page
+                return items
+            lastItem = latestLast
+            lastName = latestName
+        return []

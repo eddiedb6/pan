@@ -25,7 +25,7 @@ class Uploader:
             return
         closeUI = None
         if IsUIVisible(self.__header):
-            closeUI = self.__headerClosed
+            closeUI = self.__headerClose
         elif IsUIVisible(self.__minHeader):
             closeUI = self.__minHeaderClose
         else:
@@ -67,5 +67,20 @@ class Uploader:
             nowTime = datetime.datetime.now()
             if (nowTime - startTime).seconds > PanConfig.UploadingMaxWaitingSeconds:
                 break
+            time.sleep(PanConfig.UploadingCheckInterval)
+        return False
+
+    def WaitUploadingQueueFinished(self):
+        startTime = datetime.datetime.now()
+        while True:
+            if IsUIVisible(self.__uploader):
+                if IsUIVisible(self.__minHeader):
+                    return True
+            else:
+                return True
+            nowTime = datetime.datetime.now()
+            if (nowTime - startTime).seconds > PanConfig.UploadingMaxWaitingSeconds:
+                print("** Too long to wait for upload queue finished!")
+                startTime = datetime.datetime.now()
             time.sleep(PanConfig.UploadingCheckInterval)
         return False

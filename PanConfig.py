@@ -15,6 +15,8 @@ FileIgnoreRules = [
 IsDeleteRedundant = False
 FindRetryTimes = 3
 
+MaxAreaListInitialItem = 90
+
 # The break time after each UI operation
 ShortBreakSeconds = 1
 LongBreakSeconds = 3
