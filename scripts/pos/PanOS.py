@@ -69,9 +69,9 @@ class PanOS:
                 for line in self.__outputs:
                     log.write(line + "\n")
         except:
-            print("Failed to print: " + outputPath)
+            print("** Failed to print: " + outputPath)
             return
-        print("Successfully print to: " + outputPath)
+        print(".. Successfully print to: " + outputPath)
 
     def ExeQuit(self):
         self.__finished = True
