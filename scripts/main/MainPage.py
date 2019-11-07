@@ -44,7 +44,7 @@ class MainPage:
 
         basePath = "/"
         relativeDir = path
-        if path.find(currentPath) == 0:
+        if path.find(currentPath) == 0 and path[len(currentPath)] == "/":
             # This means it could go further base on current page
             relativeDir = path[len(currentPath):]
             basePath = currentPath
