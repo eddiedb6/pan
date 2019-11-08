@@ -10,9 +10,10 @@ from Utility import *
 
 class PanOS:
     def __init__(self, browser, windows):
+        self.__browser = browser
         self.__windows = windows
+
         self.__page = MainPage(browser, windows)
-        
         self.__console = Console(self)
         self.__file = File()
         self.__outputs = []
@@ -36,7 +37,7 @@ class PanOS:
                 cmd()
             except:
                 exceptionCount = exceptionCount + 1
-                if exceptionCount > PanConfig.FindRetryTimes:
+                if exceptionCount > PanConfig.FindRetryTimes * PanConfig.FindRetryTimes:
                     print("!!!! Now it's time to quit !!!!")
                     i = sys.stdin.read(1)
                     break
@@ -200,4 +201,7 @@ class PanOS:
 
     def __reset(self):
         self.__windows.Reset()
-        self.__page.Reset()
+        if not self.__browser.OpenURL("URLLogin"):
+            print("*** Failed to reopen page!")
+            raise Exception("Reopen page failed")
+        self.__page = MainPage(self.__browser, self.__windows)

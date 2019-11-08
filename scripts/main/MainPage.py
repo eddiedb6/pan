@@ -144,6 +144,11 @@ class MainPage:
 
     def Reset(self):
         print(".. Reset")
+        self.Dump()
+        self.__initPageElement()
+
+    def Dump(self):
+        print(".. Dump")
         self.__uploadCount = 0
         self.__uploader.Close()
         self.__uploadButton.Dump()
@@ -153,7 +158,6 @@ class MainPage:
         self.__address.Dump()
         self.__fileRoot.Dump()
         self.__uploader.Dump()
-        self.__initPageElement()
 
     def __openFolder(self, basePath, folder):
         print(".. openFolder: " + basePath + ", " + folder)
