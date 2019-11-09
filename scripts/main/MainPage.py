@@ -6,6 +6,7 @@ import PanConfig
 from Item import *
 from Utility import *
 from Uploader import *
+from Splash import *
 
 class MainPage:
     def __init__(self, browser, windows):
@@ -28,6 +29,7 @@ class MainPage:
         self.__address = None
         self.__fileRoot = None
         self.__uploader = None
+        self.__splash = None
         self.__initPageElement()
 
     ### Properties ###
@@ -158,6 +160,7 @@ class MainPage:
         self.__address.Dump()
         self.__fileRoot.Dump()
         self.__uploader.Dump()
+        self.__splash.Dump()
 
     def __openFolder(self, basePath, folder):
         print(".. openFolder: " + basePath + ", " + folder)
@@ -268,6 +271,9 @@ class MainPage:
         self.__address = self.__addressStatus.FindSubUI("AddressValue")
         self.__fileRoot = self.__page.FindSubUI("EntryAllFile")
         self.__uploader = Uploader(self.__page)
+        self.__splash = Splash(self.__page)
+        time.sleep(PanConfig.ShortBreakSeconds)
+        self.__splash.Close()
 
     def __queryWholePageDynamicItem(self, config):
         items = SafeListFind(lambda: self.__area.TryToFindDynamicSubUI(config))

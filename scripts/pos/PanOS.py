@@ -1,5 +1,6 @@
 import sys
 import collections
+import traceback
 
 import PanConfig
 from MainPage import *
@@ -35,13 +36,16 @@ class PanOS:
             lastCmd = cmd
             try:
                 cmd()
-            except:
+            except Exception as e:
+                print("*********")
+                print(e)
+                traceback.print_exc()
                 exceptionCount = exceptionCount + 1
                 if exceptionCount > PanConfig.FindRetryTimes * PanConfig.FindRetryTimes:
                     print("!!!! Now it's time to quit !!!!")
                     i = sys.stdin.read(1)
                     break
-                print("*** Reset on exception")
+                print("*** Reset on exception: " + str(exceptionCount))
                 self.__reset()
             else:
                 exceptionCount = 0
@@ -204,4 +208,5 @@ class PanOS:
         if not self.__browser.OpenURL("URLLogin"):
             print("*** Failed to reopen page!")
             raise Exception("Reopen page failed")
+        time.sleep(PanConfig.LongBreakSeconds)
         self.__page = MainPage(self.__browser, self.__windows)
